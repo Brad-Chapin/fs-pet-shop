@@ -14,7 +14,7 @@ if (cmd === 'read') {
     }
 
     var pets = JSON.parse(data);
-    if ((index < 0) || (index >= data.length)) {
+    if ((index < 0) || (index >= pets.length) || (isNaN(index))) {
       console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
       process.exit(1);
     } else if (index == undefined){
@@ -41,7 +41,7 @@ else if (cmd === 'create') {
     } else if ((age == undefined) || (name == undefined) || (kind == undefined)){
       console.error(`Usage: ${node} ${file} ${cmd} AGE KIND NAME`);
       process.exit(1);
-    } else if (parseInt(age) == NaN) {
+    } else if (isNaN(parseInt(age))) {
       console.error(`Usage: ${node} ${file} ${cmd} AGE KIND NAME`);
       process.exit(1);
     } else {
