@@ -61,8 +61,71 @@ else if (cmd === 'create') {
       console.log(pets);
     });
   });
-}
-else {
-  console.error(`Usage: ${node} ${file} [read | create]`);
+} else if (cmd === "update"){
+  fs.readFile(petPath, 'utf8', function(readErr, data) {
+    if (readErr) {
+      throw readErr;
+    }
+    var pets = JSON.parse(data);
+    var index = process.argv[3];
+    var age = process.argv[4];
+    var kind = process.argv[5];
+    var name = process.argv[6];
+
+    if (!pets) {
+      console.error(`Usage: ${node} ${file} ${cmd} INDEX AGE KIND NAME`);
+      process.exit(1);
+    } else if ((age == undefined) || (name == undefined) || (kind == undefined)){
+      console.error(`Usage: ${node} ${file} ${cmd} INDEX AGE KIND NAME`);
+      process.exit(1);
+    } else if (isNaN(parseInt(age))) {
+      console.error(`Usage: ${node} ${file} ${cmd} INDEX AGE KIND NAME`);
+      process.exit(1);
+    } else if ((index < 0) || (index >= pets.length) || (isNaN(index))){
+    console.error(`Usage: ${node} ${file} ${cmd} INDEX AGE KIND NAME`);
+    process.exit(1);
+    } else {
+      pets[index].age = age;
+      pets[index].kind = kind;
+      pets[index].name = name;
+    }
+
+    var petsJSON = JSON.stringify(pets);
+
+    fs.writeFile(petPath, petsJSON, function(writeErr) {
+      if (writeErr) {
+        throw writeErr;
+      }
+
+      console.log(pets);
+    });
+  });
+} else if (cmd = "destroy"){
+  fs.readFile(petPath, 'utf8', function(readErr, data) {
+    if (readErr) {
+      throw readErr;
+    }
+    var pets = JSON.parse(data);
+    var index = process.argv[3];
+    if (!pets) {
+      console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
+      process.exit(1);
+    } else if ((index < 0) || (index >= pets.length) || (isNaN(index))){
+      console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
+      process.exit(1);
+    } else {
+      pets.splice(index, 1);
+    }
+    var petsJSON = JSON.stringify(pets);
+
+    fs.writeFile(petPath, petsJSON, function(writeErr) {
+      if (writeErr) {
+        throw writeErr;
+      }
+      console.log(pets);
+    });
+  });
+} else {
+  console.error(`Usage: ${node} ${file} [read | create | update | destroy]`);
   process.exit(1);
 }
